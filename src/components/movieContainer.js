@@ -18,7 +18,7 @@ const useStyles = makeStyles({
     justifyContent: "flex-start",
     alignItems: "center",
     width: "100%",
-    margin: "auto 40px",
+    maxWidth: 800,
   },
   row: {},
   rowBtns: {
@@ -30,7 +30,7 @@ const useStyles = makeStyles({
     width: 200,
   },
   addBtnWrapper: {
-    marginTop: 20,
+    marginBottom: 20,
   },
 });
 
@@ -103,6 +103,15 @@ export const MovieContainer = (props) => {
         updateMovies={updateMovies}
         movie={movieToEdit}
       />
+      <div className={classes.addBtnWrapper}>
+        <Button
+          className={classes.addBtn}
+          variant="contained"
+          onClick={() => setDisplayAddMovie(true)}
+        >
+          Add movie
+        </Button>
+      </div>
       {movies ? (
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -150,19 +159,13 @@ export const MovieContainer = (props) => {
           </Table>
         </TableContainer>
       ) : (
-        <div>
+        <div style={{ textAlign: "center" }}>
           Det finns inga filmer i databasen, lägg till via knappen "Add Movie"
+          <br />
+          Databasen är en mockad databas och kommer att nollställas vid
+          siduppdatering
         </div>
       )}
-      <div className={classes.addBtnWrapper}>
-        <Button
-          className={classes.addBtn}
-          variant="contained"
-          onClick={() => setDisplayAddMovie(true)}
-        >
-          Add movie
-        </Button>
-      </div>
     </div>
   );
 };

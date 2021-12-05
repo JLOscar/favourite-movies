@@ -35,38 +35,45 @@ const useStyles = makeStyles({
 export const AddMovieDialog = (props) => {
   const classes = useStyles();
   const { open, setDisplayAddMovie, addMovie } = props;
-  const [title, setTitle] = useState("");
-  const [year, setYear] = useState(0);
-  const [rating, setRaiting] = useState(0);
-  const [actor, setActor] = useState("");
+  const [title, setTitle] = useState(null);
+  const [year, setYear] = useState(null);
+  const [rating, setRaiting] = useState(null);
+  const [actor, setActor] = useState(null);
   const [movieIndex, setMovieIndex] = useState(0);
 
   const close = () => {
+    setTitle(null);
+    setYear(null);
+    setRaiting(null);
+    setActor(null);
     setDisplayAddMovie(false);
   };
 
   const handleAddMovie = () => {
-    console.log({ title, year, rating, actor });
-    let errStr = null;
+    let errStr = "";
 
-    // if (title && typeof title !== "string") {
-    //   errStr = "* Must have a title \n";
-    // }
-    // if (year) {
-    //   console.log(year);
-    //   errStr = errStr + "* Must have a valid year \n";
-    // }
-    // if (rating && typeof rating !== "number") {
-    //   errStr = errStr + "* Must have a raiting \n";
-    // }
-    // if (actor && typeof actor !== "string") {
-    //   errStr = errStr + "* Must have a actor \n";
-    // }
-
-    if (errStr) {
-      alert(errStr);
+    if (!title) {
+      errStr = errStr + "* Must have a title\n";
     }
-    console.log({ errStr });
+    if (!year || !+year) {
+      errStr = errStr + "* Must have a valid year\n";
+    }
+    if (
+      !rating ||
+      !+rating ||
+      ![...Array(11).keys()].map((x) => x++).includes(+rating)
+    ) {
+      errStr = errStr + "* Must have a valid rating\n";
+    }
+    if (!actor) {
+      errStr = errStr + "* Must have an actor\n";
+    }
+
+    if (errStr && errStr.length) {
+      alert(errStr);
+      setDisplayAddMovie(true);
+      return;
+    }
 
     //if all successful
     addMovie({ id: movieIndex, title, year, rating, actor });
@@ -89,7 +96,7 @@ export const AddMovieDialog = (props) => {
           <TextField
             className={classes.input}
             placeholder={"Year"}
-            onChange={(e) => setYear(+e.target.value)}
+            onChange={(e) => setYear(e.target.value)}
           />
           <TextField
             className={classes.input}

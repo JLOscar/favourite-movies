@@ -59,6 +59,31 @@ export const EditMovieDialog = (props) => {
   };
 
   const handleConfirm = () => {
+    let errStr = "";
+
+    if (!title) {
+      errStr = errStr + "* Must have a title\n";
+    }
+    if (!year || !+year) {
+      errStr = errStr + "* Must have a valid year\n";
+    }
+    if (
+      !rating ||
+      !+rating ||
+      ![...Array(11).keys()].map((x) => x++).includes(+rating)
+    ) {
+      errStr = errStr + "* Must have a valid rating\n";
+    }
+    if (!actor) {
+      errStr = errStr + "* Must have an actor\n";
+    }
+
+    if (errStr && errStr.length) {
+      alert(errStr);
+      setDisplayEditMovie(true);
+      return;
+    }
+
     updateMovies({ id: data.id, title, year, rating, actor });
     close();
   };
