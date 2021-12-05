@@ -63,18 +63,14 @@ export const MovieContainer = (props) => {
   };
 
   const updateMovies = (updatedMovie) => {
-    console.log({ updatedMovie });
     let tempMovies = [];
     for (const movie of movies) {
-      console.log("movie.id", movie.id);
-      console.log(updatedMovie);
       if (movie.id === updatedMovie.id) {
         tempMovies.push(updatedMovie);
       } else {
         tempMovies.push(movie);
       }
     }
-    console.log(tempMovies);
     setMovies(tempMovies);
   };
 
