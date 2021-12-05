@@ -7,7 +7,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { Button } from "@mui/material";
+import { Alert, Button } from "@mui/material";
 import { AddMovieDialog } from "./addMovieDialog";
 import { EditMovieDialog } from "./editMovieDialog";
 
@@ -40,6 +40,12 @@ export const MovieContainer = (props) => {
   const [displayAddMovie, setDisplayAddMovie] = useState(false);
   const [displayEditMovie, setDisplayEditMovie] = useState(false);
   const [movieToEdit, setMovieToEdit] = useState(null);
+  const [displayAlert, setDisplayAlert] = useState(false);
+  const [alertData, setAlertData] = useState({
+    severity: null,
+    title: null,
+    text: null,
+  });
 
   useEffect(() => {
     setMovies();
@@ -60,6 +66,12 @@ export const MovieContainer = (props) => {
     } else {
       setMovies([incomingMovie]);
     }
+    setAlertData({
+      severity: "success",
+      title: incomingMovie.title,
+      text: "Successfully added movie",
+    });
+    setDisplayAlert(true);
   };
 
   const updateMovies = (updatedMovie) => {
@@ -71,23 +83,52 @@ export const MovieContainer = (props) => {
         tempMovies.push(movie);
       }
     }
+    setAlertData({
+      severity: "success",
+      title: updatedMovie.title,
+      text: "Successfully edited movie",
+    });
+    setDisplayAlert(true);
     setMovies(tempMovies);
   };
 
   const handleRemove = (id) => {
     let tempMovies = [];
+    let removedTitle = "";
 
     for (const movie of movies) {
       if (movie.id !== id) {
         tempMovies.push(movie);
+      } else {
+        removedTitle = movie.title;
       }
     }
-
+    setAlertData({
+      severity: "success",
+      title: removedTitle,
+      text: "Successfully removed movie",
+    });
+    setDisplayAlert(true);
     setMovies(tempMovies);
+  };
+
+  const hideAlert = () => {
+    setDisplayAlert(false);
+    setAlertData({
+      severity: null,
+      title: null,
+      text: null,
+    });
   };
 
   return (
     <div className={classes.container}>
+      {displayAlert && (
+        <Alert
+          style={{ margin: "20px 0" }}
+          severity="success"
+        >{`${alertData.text} ${alertData.title}`}</Alert>
+      )}
       <AddMovieDialog
         open={displayAddMovie}
         setDisplayAddMovie={setDisplayAddMovie}
@@ -103,7 +144,10 @@ export const MovieContainer = (props) => {
         <Button
           className={classes.addBtn}
           variant="contained"
-          onClick={() => setDisplayAddMovie(true)}
+          onClick={() => {
+            hideAlert();
+            setDisplayAddMovie(true);
+          }}
         >
           Add movie
         </Button>
@@ -136,14 +180,20 @@ export const MovieContainer = (props) => {
                     <div className={classes.rowBtns}>
                       <Button
                         variant="contained"
-                        onClick={() => handleEdit(row.id)}
+                        onClick={() => {
+                          hideAlert();
+                          handleEdit(row.id);
+                        }}
                       >
                         Edit
                       </Button>
                       <Button
                         style={{ backgroundColor: "red" }}
                         variant="contained"
-                        onClick={() => handleRemove(row.id)}
+                        onClick={() => {
+                          hideAlert();
+                          handleRemove(row.id);
+                        }}
                       >
                         X
                       </Button>
